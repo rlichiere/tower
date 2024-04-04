@@ -1,2 +1,2 @@
 # tower
-Golang tower defense
+Tower defense in Golang
