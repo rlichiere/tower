@@ -21,6 +21,8 @@ func main() {
 	// to be removed
 	tower := game.NewTower(2, 2, 15)
 	g.Towers = append(g.Towers, tower)
+	tower2 := game.NewTower(2, 29, 15)
+	g.Towers = append(g.Towers, tower2)
 
 	wave := game.NewWave(1, 10, 1, g)
 	for {
@@ -31,11 +33,7 @@ func main() {
 		g.MoveEnemies()
 
 		if g.GetIteration()%addEnemyEvery == 1 {
-			// add enemy on stage
-			// g.AddEnemyOnStage(10)
 			wave.Iterate()
-		} else {
-			fmt.Println("Enemies on stage:", len(g.Enemies))
 		}
 
 		// manage tower shots

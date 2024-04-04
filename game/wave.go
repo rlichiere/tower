@@ -1,7 +1,5 @@
 package game
 
-import "fmt"
-
 type Wave struct {
 	Id     int
 	Length int
@@ -25,7 +23,6 @@ func (w *Wave) Iterate() {
 	if !w.IsFinished() {
 		w.Index++
 		if w.Index > 0 {
-			fmt.Println("Add enemy on stage")
 			w.game.AddEnemyOnStage(10 + w.Armor)
 		}
 	}

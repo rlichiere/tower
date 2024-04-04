@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -29,11 +28,10 @@ func (t *Tower) ManageShot(enemies EnemiesList, g *Game) {
 	if t.Reload > 0 {
 		t.Reload--
 	}
-	fmt.Println("tower reload:", t.Reload)
 	killAtIndex := -1
 	for enemyIndex, enemy := range enemies {
 		if t.IsReady() && t.CheckEnemyRange(enemy) {
-			fmt.Println("Kill enemy !")
+			// this enemy must be killed
 			killAtIndex = enemyIndex
 			t.ResetReload()
 		}

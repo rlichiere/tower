@@ -4,8 +4,13 @@ import "fmt"
 
 func (g *Game) Display() {
 	var screen string
+	screen = ""
+
+	// display enemy data
+	screen += fmt.Sprintf("Enemies: %3d\n", len(g.Enemies))
+
 	// display player data
-	screen = fmt.Sprintf("Score: %15d        Lifes: %2d        Money: %10d\n", g.Player.GetScore(), g.Player.GetLifes(), g.Player.GetMoney())
+	screen += fmt.Sprintf("Score: %15d        Lifes: %2d        Money: %10d\n", g.Player.GetScore(), g.Player.GetLifes(), g.Player.GetMoney())
 
 	// display grid
 	for x := 0; x < len(g.Stage); x++ {
