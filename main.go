@@ -72,7 +72,6 @@ func main() {
 		time.Sleep(time.Duration(game.Config.Game.IterationDuration) * time.Millisecond)
 	}
 
-	// <-ctx.Done()
 	gameServer.End(ctx)
 
 }
