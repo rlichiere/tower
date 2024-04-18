@@ -19,6 +19,13 @@ type PlayerConfig struct {
 	InitialMoney int
 }
 
+type ServerAddr string
+
+type ServerConfig struct {
+	ServerAddr ServerAddr
+	ServerPort int
+}
+
 type TowerConfig struct {
 	InitialStrength int
 	UpgradeStrength int
@@ -36,17 +43,22 @@ var enemyConfig = EnemyConfig{
 }
 
 var gameConfig = GameConfig{
-	IterationDuration:    60,
+	IterationDuration:    10,
 	MoneyPerIteration:    1,
 	MoneyPerKill:         1,
 	MoneyPerTowerBuild:   1,
 	MoneyPerTowerUpgrade: 1,
-	MaximumIterations:    100000,
+	MaximumIterations:    10000000,
 }
 
 var playerConfig = PlayerConfig{
 	InitialLifes: 10,
 	InitialMoney: 1,
+}
+
+var serverConfig = ServerConfig{
+	ServerAddr: "localhost",
+	ServerPort: 8080,
 }
 
 var towerConfig = TowerConfig{
@@ -64,12 +76,14 @@ var Config = struct {
 	Enemy  EnemyConfig
 	Game   GameConfig
 	Player PlayerConfig
+	Server ServerConfig
 	Tower  TowerConfig
 	Wave   WaveConfig
 }{
 	Enemy:  enemyConfig,
 	Game:   gameConfig,
 	Player: playerConfig,
+	Server: serverConfig,
 	Tower:  towerConfig,
 	Wave:   waveConfig,
 }

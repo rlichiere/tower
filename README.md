@@ -32,7 +32,7 @@ To place a tower in the middle of the grid, send the following request: `http://
 
 ## Incoming
 
-- avoid upgrading full-level tower
+- improve screen cartouche
 - increase price of tower upgrade
 - manage counter of tower kills
 - manage log display

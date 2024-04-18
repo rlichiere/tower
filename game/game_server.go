@@ -68,31 +68,19 @@ func (gh *GameHandler) handlerTower(w http.ResponseWriter, r *http.Request) {
 	// check if the coordinates match and existing tower in the stage
 	cell = gh.Game.Stage[X][Y]
 	if cell.IsTower() {
-		done := gh.Game.Player.SpendMoney(Config.Game.MoneyPerTowerUpgrade)
-		if !done {
-			errMsg := "Not enough money to upgrade"
-			//fmt.Println(errMsg)
+		ok, err := gh.Game.UpgradeTower(X, Y)
+		if !ok {
 			w.WriteHeader(http.StatusNotAcceptable)
-			io.WriteString(w, errMsg)
+			io.WriteString(w, err)
 			return
-		}
-		for _, tower := range gh.Game.Towers {
-			if tower.X == X && tower.Y == Y {
-				tower.Strength += 1
-				break
-			}
 		}
 	} else {
-		done := gh.Game.Player.SpendMoney(Config.Game.MoneyPerTowerBuild)
-		if !done {
-			errMsg := "Not enough money to build"
-			//fmt.Println(errMsg)
+		ok, err := gh.Game.BuildTower(X, Y)
+		if !ok {
 			w.WriteHeader(http.StatusNotAcceptable)
-			io.WriteString(w, errMsg)
+			io.WriteString(w, err)
 			return
 		}
-		tower := NewTower(X, Y)
-		gh.Game.Towers = append(gh.Game.Towers, tower)
 	}
 }
 
@@ -101,8 +89,6 @@ type GameServer struct {
 }
 
 func (gs *GameServer) Start() context.Context {
-	const serverAddr = "localhost"
-
 	gameHandler := GameHandler{Game: gs.Game}
 
 	mux := http.NewServeMux()
@@ -111,10 +97,10 @@ func (gs *GameServer) Start() context.Context {
 
 	ctx, cancelCtx := context.WithCancel(context.Background())
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%d", Config.Server.ServerPort),
 		Handler: mux,
 		BaseContext: func(l net.Listener) context.Context {
-			ctx = context.WithValue(ctx, serverAddr, l.Addr().String())
+			ctx = context.WithValue(ctx, Config.Server.ServerAddr, l.Addr().String())
 			return ctx
 		},
 	}
@@ -122,7 +108,7 @@ func (gs *GameServer) Start() context.Context {
 	go func() {
 		err := server.ListenAndServe()
 		if errors.Is(err, http.ErrServerClosed) {
-			fmt.Printf("server closed\n")
+			fmt.Print("server closed\n")
 		} else if err != nil {
 			fmt.Printf("error listening for server: %s\n", err)
 		}

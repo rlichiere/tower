@@ -19,14 +19,9 @@ func main() {
 
 	addEnemyEvery := 5
 
-	// to be removed
-	// tower := game.NewTower(2, 2)
-	// g.Towers = append(g.Towers, tower)
-
 	wave := game.NewWave(1, 10, 0, g)
 	for {
 		g.Iterate()
-		fmt.Printf("Iteration: %4d    Wave: %4d\n", g.GetIteration(), wave.Id)
 
 		// move enemies
 		g.MoveEnemies()
@@ -47,7 +42,7 @@ func main() {
 
 		// manage towers shot
 		g.CompileStage()
-		g.Display()
+		g.Display(wave.Id)
 
 		if player.IsDead() {
 			fmt.Println("Player is dead")

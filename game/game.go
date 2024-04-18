@@ -49,6 +49,33 @@ func (g *Game) ManagerTowersShots() {
 	}
 }
 
+func (g *Game) BuildTower(x int, y int) (ok bool, err string) {
+	done := g.Player.SpendMoney(Config.Game.MoneyPerTowerBuild)
+	if !done {
+		return false, "Not enough money to build"
+	}
+	tower := NewTower(x, y)
+	g.Towers = append(g.Towers, tower)
+	return true, ""
+}
+
+func (g *Game) UpgradeTower(x int, y int) (ok bool, err string) {
+	done := g.Player.SpendMoney(Config.Game.MoneyPerTowerUpgrade)
+	if !done {
+		return false, "Not enough money to upgrade"
+	}
+	for _, tower := range g.Towers {
+		if tower.X == x && tower.Y == y {
+			if tower.Strength == 10 {
+				return false, "Tower is already maxed"
+			}
+			tower.Strength += 1
+			break
+		}
+	}
+	return true, ""
+}
+
 func (g *Game) ShootEnemy(enemy *Enemy, shotStrenght int, enemyIndex int) {
 	enemy.Life -= shotStrenght
 	if enemy.Life <= 0 {
