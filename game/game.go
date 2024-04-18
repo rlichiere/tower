@@ -49,12 +49,22 @@ func (g *Game) ManagerTowersShots() {
 	}
 }
 
-func (g *Game) KillEnemy(enemyIndex int) {
+func (g *Game) ShootEnemy(enemy *Enemy, shotStrenght int, enemyIndex int) {
+	enemy.Life -= shotStrenght
+	if enemy.Life <= 0 {
+		g.KillEnemy(enemy, enemyIndex)
+	}
+}
+
+func (g *Game) KillEnemy(enemy *Enemy, enemyIndex int) {
+	//fmt.Println("Kill enemy X:", enemy.X, "Y:", enemy.Y, "Position in path:", enemy.PositionInPath)
 	g.Enemies = Remove(g.Enemies, enemyIndex)
+	g.Player.EarnMoney(Config.Game.MoneyPerKill)
+	g.Player.EarnScore(enemy.PositionInPath)
 }
 
 func (g *Game) CompileStage() {
-	g.Stage.InitializeFromStage(g.StageGround)
+	g.Stage.InitializeFromGround(g.StageGround)
 
 	// enemies
 	for _, enemy := range g.Enemies {
@@ -69,6 +79,28 @@ func (g *Game) CompileStage() {
 
 	// towers
 	for _, tower := range g.Towers {
-		g.Stage[tower.X][tower.Y].Content = Symbols.Tower0
+		switch tower.Strength {
+		case 1:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower0
+		case 2:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower1
+		case 3:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower2
+		case 4:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower3
+		case 5:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower4
+		case 6:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower5
+		case 7:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower6
+		case 8:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower7
+		case 9:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower8
+		default:
+			g.Stage[tower.X][tower.Y].Content = Symbols.Tower9
+		}
+		g.Stage[tower.X][tower.Y].Kind = "tower"
 	}
 }

@@ -6,8 +6,8 @@ type Player struct {
 	score int
 }
 
-func NewPlayer(lifes int, money int) Player {
-	player := Player{lifes: lifes, money: money, score: 0}
+func NewPlayer() Player {
+	player := Player{lifes: Config.Player.InitialLifes, money: Config.Player.InitialMoney, score: 0}
 	return player
 }
 
@@ -17,6 +17,14 @@ func (p *Player) LooseLife() {
 
 func (p *Player) EarnMoney(money int) {
 	p.money += money
+}
+
+func (p *Player) SpendMoney(money int) bool {
+	if p.money < money {
+		return false
+	}
+	p.money -= money
+	return true
 }
 
 func (p *Player) EarnScore(score int) {

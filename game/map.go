@@ -4,6 +4,8 @@ import (
 	_ "embed"
 	"fmt"
 	"strings"
+
+	"github.com/pterm/pterm"
 )
 
 // ˥˩˪    ᒣᒥᒧᒪ—–—‗|⎟          ⎸⎹⎾⎺⎿⏋⎽⏌         ⌈⌉⌊⌋ ⎺⎻⎼⎽     ╔╗╚╝║═      ⯧    ▉
@@ -38,32 +40,34 @@ var Symbols = struct {
 	EnemyAtStart      string
 	EnemyAtEnd        string
 }{
-	CornerTopLeft:     "╔═",
-	CornerTopRight:    "╗ ",
-	CornerBottomLeft:  "╚═",
-	CornerBottomRight: "╝ ",
-	EdgeTop:           "══",
-	EdgeBottom:        "══",
-	EdgeLeft:          "║ ",
-	EdgeRight:         "║ ",
-	EmptyCell:         ". ",
-	Wall:              "▉▉",
-	InputCell:         "> ",
-	OutputCell:        "> ",
-	Tower0:            " Ⅰ",
-	Tower1:            " Ⅱ",
-	Tower2:            " Ⅲ",
-	Tower3:            " Ⅳ",
-	Tower4:            " Ⅴ",
-	Tower5:            " Ⅵ",
-	Tower6:            " Ⅶ",
-	Tower7:            " Ⅷ",
-	Tower8:            " Ⅸ",
-	Tower9:            " Ⅹ",
-	Enemy:             "⯧ ",
-	EnemyAtStart:      "⯧ ",
-	EnemyAtEnd:        " ⯧",
+	CornerTopLeft:     pterm.FgMagenta.Sprint("╔═"),
+	CornerTopRight:    pterm.FgMagenta.Sprint("╗ "),
+	CornerBottomLeft:  pterm.FgMagenta.Sprint("╚═"),
+	CornerBottomRight: pterm.FgMagenta.Sprint("╝ "),
+	EdgeTop:           pterm.FgMagenta.Sprint("══"),
+	EdgeBottom:        pterm.FgMagenta.Sprint("══"),
+	EdgeLeft:          pterm.FgMagenta.Sprint("║ "),
+	EdgeRight:         pterm.FgMagenta.Sprint("║ "),
+	EmptyCell:         pterm.FgRed.Sprint(". "),
+	Wall:              pterm.FgBlue.Sprint("▉▉"),
+	InputCell:         pterm.FgLightYellow.Sprint("> "),
+	OutputCell:        pterm.FgLightYellow.Sprint("> "),
+	Tower0:            pterm.BgBlue.Sprint("Ⅰ "),
+	Tower1:            pterm.FgBlue.Sprint("Ⅱ "),
+	Tower2:            pterm.FgBlue.Sprint("Ⅲ "),
+	Tower3:            pterm.FgBlue.Sprint("Ⅳ "),
+	Tower4:            pterm.FgBlue.Sprint("Ⅴ "),
+	Tower5:            pterm.FgBlue.Sprint("Ⅵ "),
+	Tower6:            pterm.FgBlue.Sprint("Ⅶ "),
+	Tower7:            pterm.FgBlue.Sprint("Ⅷ "),
+	Tower8:            pterm.FgBlue.Sprint("Ⅸ "),
+	Tower9:            pterm.FgBlue.Sprint("Ⅹ "),
+	Enemy:             pterm.FgLightRed.Sprint("⯧ "),
+	EnemyAtStart:      pterm.FgLightRed.Sprint("⯧ "),
+	EnemyAtEnd:        pterm.FgLightRed.Sprint(" ⯧"),
 }
+
+const AlphabetY = "abcdefghijklmnopqrstuvwxyzABCD"
 
 type StageMap [32][32]Cell
 
@@ -83,11 +87,11 @@ func (s *StageMap) Initialize() {
 	s.ReadMapFile()
 }
 
-func (s *StageMap) InitializeFromStage(source *StageMap) {
+func (s *StageMap) InitializeFromGround(source *StageMap) {
 	for x := 0; x < 32; x++ {
 		for y := 0; y < 32; y++ {
 			cellSource := source[x][y]
-			cell := Cell{X: cellSource.X, Y: cellSource.Y, Content: cellSource.Content}
+			cell := Cell{X: cellSource.X, Y: cellSource.Y, Content: cellSource.Content, Kind: cellSource.Kind}
 			s[x][y] = cell
 		}
 	}
@@ -102,6 +106,7 @@ func (s *StageMap) ReadMapFile() {
 			cString := fmt.Sprintf("%c", c)
 			if cString == wallChar {
 				s[x][y].Content = Symbols.Wall
+				s[x][y].Kind = "wall"
 			}
 			y++
 		}
@@ -111,7 +116,7 @@ func (s *StageMap) ReadMapFile() {
 func (s *StageMap) CheckEnemyOnOutput(enemies EnemiesList) int {
 	for index, enemy := range enemies {
 		if enemy.X == 16 && enemy.Y >= 32 {
-			fmt.Println("Drop enemy", index, "from Enemies")
+			//fmt.Println("Drop enemy", index, "from Enemies")
 			return index
 		}
 	}

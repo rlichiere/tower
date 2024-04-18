@@ -4,6 +4,7 @@ type Cell struct {
 	X       int
 	Y       int
 	Content string
+	Kind    string
 }
 
 func (cell *Cell) isEdgeTop() bool {
@@ -77,4 +78,12 @@ func (cell *Cell) DetectContent() string {
 	}
 
 	return Symbols.EmptyCell
+}
+
+func (cell *Cell) IsWall() bool {
+	return cell.Kind == "wall"
+}
+
+func (cell *Cell) IsTower() bool {
+	return cell.Kind == "tower"
 }

@@ -5,44 +5,44 @@ import (
 )
 
 type Tower struct {
-	X             int
-	Y             int
-	Reload        int
-	initialReload int
+	X        int
+	Y        int
+	Cooling  int
+	cooldown int
+	Strength int
 }
 
-func NewTower(x int, y int, reload int) *Tower {
-	tower := Tower{X: x, Y: y, Reload: reload, initialReload: reload}
+func NewTower(x int, y int) *Tower {
+	tower := Tower{X: x, Y: y, Cooling: Config.Tower.InitialCooldown, cooldown: Config.Tower.InitialCooldown, Strength: 1}
 	return &tower
 }
 
-func (t *Tower) IsReady() bool {
-	return t.Reload == 0
+func (t *Tower) IsReadyToShoot() bool {
+	return t.Cooling == 0
 }
 
-func (t *Tower) ResetReload() {
-	t.Reload = t.initialReload
+func (t *Tower) ResetCooldown() {
+	t.Cooling = t.cooldown
 }
 
 func (t *Tower) ManageShot(enemies EnemiesList, g *Game) {
-	if t.Reload > 0 {
-		t.Reload--
+	if t.Cooling > 0 {
+		t.Cooling--
 	}
-	killAtIndex := -1
+	if !t.IsReadyToShoot() {
+		return
+	}
+
 	for enemyIndex, enemy := range enemies {
-		if t.IsReady() && t.CheckEnemyRange(enemy) {
-			// this enemy must be killed
-			killAtIndex = enemyIndex
-			t.ResetReload()
+		if t.CheckEnemyRange(enemy) {
+			g.ShootEnemy(enemy, t.Strength, enemyIndex)
+			t.ResetCooldown()
+			break
 		}
-	}
-	if killAtIndex >= 0 {
-		g.KillEnemy(killAtIndex)
 	}
 }
 
 func (t *Tower) CheckEnemyRange(enemy *Enemy) bool {
-
 	return math.Abs(float64(t.X-enemy.X)) == 1 && math.Abs(float64(t.Y-enemy.Y)) == 1
 }
 
