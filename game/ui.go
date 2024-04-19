@@ -17,9 +17,18 @@ func (g *Game) Display(wave int) {
 		screen = ""
 	}
 	screen += "\n"
-	header := fmt.Sprintf("Iteration: %4d                              Wave: %11d\n", g.GetIteration(), wave)
-	header += fmt.Sprintf("Enemies: %6d\n", len(g.Enemies))
-	header += fmt.Sprintf("Lifes: %8d                              Money: %10d", g.Player.GetLifes(), g.Player.GetMoney())
+	header := fmt.Sprintf("Iteration: %12d                      Wave: %11d\n", g.GetIteration(), wave)
+	header += fmt.Sprintf("Enemies: %14d\n", len(g.Enemies))
+	lifeText := fmt.Sprintf("%16d", g.Player.GetLifes())
+	switch g.Player.GetLifes() {
+	case 10:
+		lifeText = pterm.FgLightMagenta.Sprint(lifeText)
+	case 9, 8, 7, 6, 5, 4:
+		lifeText = pterm.FgLightYellow.Sprint(lifeText)
+	case 3, 2, 1, 0:
+		lifeText = pterm.FgLightRed.Sprint(lifeText)
+	}
+	header += fmt.Sprintf("Lifes: %s                      Money: %10d", lifeText, g.Player.GetMoney())
 	title := fmt.Sprintf("Score: %15d", g.Player.GetScore())
 	screen += pterm.DefaultBox.WithTitle(pterm.FgLightCyan.Sprint(title)).Sprint(pterm.FgLightMagenta.Sprint(header))
 	screen += "\n"

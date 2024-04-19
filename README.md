@@ -33,6 +33,6 @@ To place a tower in the middle of the grid, send the following request: `http://
 ## Incoming
 
 - improve screen cartouche
-- increase price of tower upgrade
+- increase price of tower upgrade (try a square rule)
 - manage counter of tower kills
-- manage log display
+- manage log display (right side)

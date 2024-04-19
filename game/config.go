@@ -43,7 +43,7 @@ var enemyConfig = EnemyConfig{
 }
 
 var gameConfig = GameConfig{
-	IterationDuration:    10,
+	IterationDuration:    60,
 	MoneyPerIteration:    1,
 	MoneyPerKill:         1,
 	MoneyPerTowerBuild:   1,
